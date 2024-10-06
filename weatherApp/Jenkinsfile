@@ -1,0 +1,66 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKER_IMAGE = 'salmahossam20/weather-app:latest'
+    }
+
+    stages {
+        stage('Checkout Code') {
+            steps {
+                git url: 'https://github.com/SalmHossam/Weather-App.git', branch: 'main'
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                echo 'No dependencies to install for static project'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                echo 'Building project...'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                echo 'No tests for static project'
+            }
+        }
+
+        // Moved the Pull and Run Docker stages inside the main stages block
+        stage('Pull Docker Image') {
+            steps {
+                script {
+                    // Pull the Docker image from a public registry
+                    sh "docker pull ${DOCKER_IMAGE}"
+                }
+            }
+        }
+
+        stage('Run Docker Container') {
+            steps {
+                script {
+                    // Run the container from the pulled image
+                    sh """
+                        docker run -d -p 8090:80 --name weather-app-container ${DOCKER_IMAGE}
+                    """
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Pipeline finished.'
+        }
+        success {
+            echo 'Build and deployment successful.'
+        }
+        failure {
+            echo 'Build or deployment failed.'
+        }
+    }
+}
