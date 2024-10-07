@@ -43,7 +43,7 @@ To build the Docker image for the Weather App:
 
 1. Clone this repository:
     ```bash
-    git clone https://github.com/your-username/Weather-App.git
+    git clone https://github.com/SalmHossam/Weather-App.git
     cd Weather-App
     ```
 
