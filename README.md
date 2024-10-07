@@ -38,7 +38,7 @@ To build the Docker image for the Weather App:
 
 ## Jenkins
 
-### Jenkinsfile Configuration
+# Jenkinsfile Configuration
 - Here’s an outline of the steps in the Jenkinsfile:
 
 - Clone the Repository: Jenkins pulls the latest code from GitHub.
@@ -65,7 +65,7 @@ The k8s folder contains the Kubernetes configuration files necessary to deploy t
 ### Namespace YAML
 - namespace.yaml: Defines the namespace where the application will run in the Kubernetes cluster.
 
-## Those are the commands to Create namespace , deploy application , expose service and Verify that the pods and services are running:
+# Those are the commands to Create namespace , deploy application , expose service and Verify that the pods and services are running:
    ```bash
     kubectl apply -f k8s/namespace.yaml
     kubectl apply -f k8s/deployment.yaml
