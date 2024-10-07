@@ -4,7 +4,7 @@
 This repository contains the necessary files and configuration for deploying the Weather App, including Docker, Jenkins CI/CD pipeline, and Kubernetes deployment configurations.
 
 ## Features
-
+- **WeatherApp**: weather application with html,css and javascript to view weather of any country 
 - **Dockerfile**: Build the application's Docker image.
 - **Jenkinsfile**: Automates the process of building, testing, and deploying the application using Jenkins.
 - **Kubernetes Configurations**: YAML files for deployment, service, and namespace setup in a Kubernetes cluster.
