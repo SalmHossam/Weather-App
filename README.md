@@ -66,7 +66,7 @@ The k8s folder contains the Kubernetes configuration files necessary to deploy t
 - namespace.yaml: Defines the namespace where the application will run in the Kubernetes cluster.
 
 ## Those are the commands to Create namespace , deploy application , expose service and Verify that the pods and services are running:
-    ```bash
+   ```bash
     kubectl apply -f k8s/namespace.yaml
     kubectl apply -f k8s/deployment.yaml
     kubectl apply -f k8s/service.yaml
