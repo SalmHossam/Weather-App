@@ -1,6 +1,3 @@
-Here is a revised and more structured version of your Weather App deployment guide, with corrected instructions and formatting:
-
----
 
 # Weather App
 
