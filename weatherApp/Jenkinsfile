@@ -39,6 +39,19 @@ pipeline {
                 }
             }
         }
+        stage('Remove Container') {
+            steps {
+                script {
+                    // remove the container from the pulled image
+                    sh """
+                        docker stop weather-app-container
+                        docker rm -f weather-app-container
+                    """
+                }
+            }
+        }
+
+
 
         stage('Run Docker Container') {
             steps {
