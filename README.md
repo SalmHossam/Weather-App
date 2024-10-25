@@ -44,22 +44,14 @@ To build the Docker image for the Weather App:
     cd Weather-App
     ```
 
-2. Build the Docker image and push it to a public Docker registry:
-    ```bash
-    docker build -t weather-app:latest .
-    docker tag weather-app:latest your-docker-repo/weather-app:latest
-    docker push your-docker-repo/weather-app:latest
-    ```
-
-## Jenkins
-
 ### Jenkinsfile Configuration
 
 The `Jenkinsfile` automates the CI/CD pipeline. Here’s an outline of the steps:
 
-1. **Clone the Repository**: Jenkins pulls the latest code from GitHub.
-2. **Jenkins Stages**: Jenkins build , test and deploy project
-3. **Deploy Docker Container**: Jenkins pulls the image from the Docker registry and creates a container from it.
+1. **Poll SCM**: Jenkins is configured to poll the Git repository for changes every minute.
+2. **Clone the Repository**: Jenkins pulls the latest code from GitHub.
+3. **Jenkins Stages**: Includes stages for building the Docker image , push this image to docker registry and deploying the application.
+4. **Deploy Docker Container**: Jenkins pulls the image from the Docker registry and creates a container from it.
 
 ### Setup Instructions for Jenkins
 
