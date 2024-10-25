@@ -4,6 +4,7 @@ pipeline {
     environment {
         DOCKER_IMAGE = 'salmahossam20/weather-app'
         DOCKER_TAG = "${env.BUILD_NUMBER}"
+        DOCKERDIR= './weatherApp'
     }
 
     stages {
@@ -34,8 +35,9 @@ pipeline {
                     // Remove previous image if it exists
                     sh "docker rmi -f ${DOCKER_IMAGE}:${DOCKER_TAG} || true"
 
-                    echo 'Building Docker image...'
-                    sh "docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} -f Dockerfile ."
+                     dir('DOCKERDIR') {
+                sh "docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} ."
+            }
 
                     echo 'Logging into Docker registry...'
                     sh "docker login -u salmahossam20 -p Salma@12345"
