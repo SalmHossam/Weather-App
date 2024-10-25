@@ -2,7 +2,8 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = 'salmahossam20/weather-app:latest'
+        DOCKER_IMAGE = 'salmahossam20/weather-app'
+        DOCKER_TAG = "${env.BUILD_NUMBER}"
     }
 
     stages {
@@ -12,80 +13,71 @@ pipeline {
             }
         }
 
-        stage('Install Dependencies') {
-            steps {
-                echo 'No dependencies to install for static project'
-            }
-        }
-
-    stage('Build') {
-    steps {
-        script {
-            // Define the Docker image with a unique tag, e.g., using BUILD_ID
-            def dockerImage = "salmahossam20/your-image-name:${env.BUILD_ID}"
-
-            echo 'Stopping and removing existing container...'
-            // Stop and remove any container using the previous image (if any)
-            sh """
-                docker ps -q --filter ancestor=${dockerImage} | xargs -r docker stop
-                docker ps -a -q --filter ancestor=${dockerImage} | xargs -r docker rm
-            """
-
-            echo 'Removing previous Docker image if it exists...'
-            // Remove the previous image if it exists
-            sh "docker rmi -f ${dockerImage} || true"
-
-            echo 'Building Docker image...'
-            sh "docker build -t ${dockerImage} ."
-
-            echo 'Logging into Docker registry...'
-            sh "docker login -u salmahossam20 -p Salma@12345"
-
-            echo 'Pushing Docker image to registry...'
-            sh "docker push ${dockerImage}"
-        }
-    }
-}
-
-
-
-        // Moved the Pull and Run Docker stages inside the main stages block
-        stage('Pull Docker Image') {
+        stage('Build Docker Image') {
             steps {
                 script {
-                    // Pull the Docker image from a public registry
-                    sh "docker pull ${DOCKER_IMAGE}"
+                    echo 'Stopping and removing existing container...'
+                    // Stop and remove any container using the previous image
+                    sh """
+                        docker ps -q --filter ancestor=${DOCKER_IMAGE}:${DOCKER_TAG} | xargs -r docker stop
+                        docker ps -a -q --filter ancestor=${DOCKER_IMAGE}:${DOCKER_TAG} | xargs -r docker rm
+                    """
+
+                    echo 'Removing previous Docker image if it exists...'
+                    // Remove previous image if it exists
+                    sh "docker rmi -f ${DOCKER_IMAGE}:${DOCKER_TAG} || true"
+
+                    echo 'Building Docker image...'
+                    sh "docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} ."
+
+                    echo 'Logging into Docker registry...'
+                    sh "docker login -u salmahossam20 -p Salma@12345"
+
+                    echo 'Pushing Docker image to registry...'
+                    sh "docker push ${DOCKER_IMAGE}:${DOCKER_TAG}"
                 }
             }
         }
-        stage('Remove Container') {
+
+        stage('Pull Docker Image') {
             steps {
                 script {
-                    // remove the container from the pulled image
+                    echo 'Pulling Docker image from registry...'
+                    // Pull the Docker image with the specific tag
+                    sh "docker pull ${DOCKER_IMAGE}:${DOCKER_TAG}"
+                }
+            }
+        }
+
+        stage('Stop and Remove Previous Container') {
+            steps {
+                script {
+                    echo 'Stopping and removing existing container...'
+                    // Stop and remove any running container with the name 'weather-app-container'
                     sh """
-                        docker stop weather-app-container
-                        docker rm -f weather-app-container
+                        docker stop weather-app-container || true
+                        docker rm -f weather-app-container || true
                     """
                 }
             }
         }
-
-
 
         stage('Run Docker Container') {
             steps {
                 script {
-                    // Run the container from the pulled image
+                    echo 'Running Docker container...'
+                    // Run the container with the pulled image
                     sh """
-                        docker run -d -p 8090:80 --name weather-app-container ${DOCKER_IMAGE}
+                        docker run -d -p 8090:80 --name weather-app-container ${DOCKER_IMAGE}:${DOCKER_TAG}
                     """
                 }
             }
         }
 
-         stage('Test') {
+        stage('Test') {
             steps {
-                echo 'Testing the project'
+                echo 'Testing the project...'
+                // Test the running container
                 sh 'curl http://localhost:8090'
             }
         }
