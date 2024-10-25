@@ -21,6 +21,17 @@ pipeline {
        stage('Build') {
     steps {
         script {
+            echo 'Stopping and removing existing container...'
+            // Stop and remove any container using the previous image (if any)
+            sh """
+                docker ps -q --filter ancestor=${dockerImage} | xargs -r docker stop
+                docker ps -a -q --filter ancestor=${dockerImage} | xargs -r docker rm
+            """
+
+            echo 'Removing previous Docker image if it exists...'
+            // Remove the previous image if it exists
+            sh "docker rmi -f ${dockerImage} || true"
+
             echo 'Building Docker image...'
             sh "docker build -t ${dockerImage} ."
 
@@ -33,12 +44,6 @@ pipeline {
     }
 }
 
-
-        stage('Test') {
-            steps {
-                echo 'No tests for static project'
-            }
-        }
 
         // Moved the Pull and Run Docker stages inside the main stages block
         stage('Pull Docker Image') {
@@ -71,6 +76,13 @@ pipeline {
                         docker run -d -p 8090:80 --name weather-app-container ${DOCKER_IMAGE}
                     """
                 }
+            }
+        }
+
+         stage('Test') {
+            steps {
+                echo 'Testing the project'
+                sh 'curl http://localhost:8090'
             }
         }
     }
