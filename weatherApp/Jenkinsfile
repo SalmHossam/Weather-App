@@ -28,7 +28,7 @@ pipeline {
                     sh "docker rmi -f ${DOCKER_IMAGE}:${DOCKER_TAG} || true"
 
                     echo 'Building Docker image...'
-                    sh "docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} ."
+                    sh "docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} Dockerfile ."
 
                     echo 'Logging into Docker registry...'
                     sh "docker login -u salmahossam20 -p Salma@12345"
