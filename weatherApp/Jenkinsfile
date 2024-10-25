@@ -18,11 +18,21 @@ pipeline {
             }
         }
 
-        stage('Build') {
-            steps {
-                echo 'Building project...'
-            }
+       stage('Build') {
+    steps {
+        script {
+            echo 'Building Docker image...'
+            sh "docker build -t ${dockerImage} ."
+
+            echo 'Logging into Docker registry...'
+            sh "docker login -u salmahossam20 -p Salma@12345 salmahossam20"
+
+            echo 'Pushing Docker image to registry...'
+            sh "docker push ${dockerImage}"
         }
+    }
+}
+
 
         stage('Test') {
             steps {
