@@ -5,6 +5,7 @@ pipeline {
         DOCKER_IMAGE = 'salmahossam20/weather-app'
         DOCKER_TAG = "${env.BUILD_NUMBER}"
         DOCKERDIR = './weatherApp'
+        DOCKER_CREDENTIALS_ID= '1'
     }
 
     stages {
@@ -42,7 +43,9 @@ pipeline {
                     }
 
                     echo 'Logging into Docker registry...'
-                    sh "docker login -u salma1soliman00@gmail.com -p Salma@12345"
+                    withCredentials([usernamePassword(credentialsId: "${DOCKER_CREDENTIALS_ID}", passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
+                        sh "docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}"
+                    }
 
                     echo 'Pushing Docker image to registry...'
                     sh "docker push ${DOCKER_IMAGE}:${DOCKER_TAG}"
