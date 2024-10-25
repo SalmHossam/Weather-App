@@ -18,9 +18,12 @@ pipeline {
             }
         }
 
-       stage('Build') {
+    stage('Build') {
     steps {
         script {
+            // Define the Docker image with a unique tag, e.g., using BUILD_ID
+            def dockerImage = "salmahossam20/your-image-name:${env.BUILD_ID}"
+
             echo 'Stopping and removing existing container...'
             // Stop and remove any container using the previous image (if any)
             sh """
@@ -36,13 +39,14 @@ pipeline {
             sh "docker build -t ${dockerImage} ."
 
             echo 'Logging into Docker registry...'
-            sh "docker login -u salmahossam20 -p Salma@12345 salmahossam20"
+            sh "docker login -u salmahossam20 -p Salma@12345"
 
             echo 'Pushing Docker image to registry...'
             sh "docker push ${dockerImage}"
         }
     }
 }
+
 
 
         // Moved the Pull and Run Docker stages inside the main stages block
