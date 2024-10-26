@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         DOCKER_IMAGE = 'salmahossam20/weather-app'
-        DOCKER_TAG = "${env.BUILD_NUMBER}"
+        DOCKER_TAG = "latest"
         DOCKERDIR = './weatherApp'
         DOCKER_CREDENTIALS_ID= '1'
     }
